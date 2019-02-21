@@ -7,8 +7,8 @@ const cors = require('cors');
 
 require('./config/database');
 
-const indexRouter = require('./routes/index');
 const { notFound, errorHandler } = require('./middlewares');
+const userRoutes = require('./routes/userRoutes');
 
 const app = express();
 
@@ -20,7 +20,11 @@ app.use(compression());
 app.use(helmet());
 app.use(cors());
 
-app.use('/', indexRouter);
+app.use('/api/users', userRoutes);
+
+app.get('/', (req, res) => {
+  res.send('Hello world!');
+});
 
 app.use(notFound);
 app.use(errorHandler);

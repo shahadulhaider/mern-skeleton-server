@@ -6,7 +6,10 @@ const config = require('./config');
 mongoose.Promise = global.Promise;
 
 try {
-  mongoose.connect(config.mongoUri, { useNewUrlParser: true });
+  mongoose.connect(config.mongoUri, {
+    useNewUrlParser: true,
+    useCreateIndex: true
+  });
 } catch (error) {
   mongoose.createConnection(config.mongoUri, {
     useNewUrlParser: true,

@@ -32,7 +32,7 @@ const UserSchema = new mongoose.Schema({
     required: [true, 'Username is required'],
     validate: {
       validator(password) {
-        return passwordReg.match(password);
+        return passwordReg.test(password);
       },
       message: '{VALUE} is not a valid password'
     }
