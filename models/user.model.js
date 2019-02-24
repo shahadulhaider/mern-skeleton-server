@@ -6,7 +6,7 @@ const jwt = require('jsonwebtoken');
 
 const config = require('../config/config');
 
-const passwordReg = /(?=.*\d)(?=.*[a-z])(?=.*[A-Z]).{6,}/;
+const { passwordReg } = require('../helpers/user.validation');
 
 const UserSchema = new mongoose.Schema({
   userName: {
