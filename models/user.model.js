@@ -2,6 +2,9 @@ const mongoose = require('mongoose');
 const validator = require('validator');
 const uniqueValidator = require('mongoose-unique-validator');
 const bcrypt = require('bcrypt');
+const jwt = require('jsonwebtoken');
+
+const config = require('../config/config');
 
 const passwordReg = /(?=.*\d)(?=.*[a-z])(?=.*[A-Z]).{6,}/;
 
@@ -82,6 +85,22 @@ UserSchema.methods = {
     } catch (error) {
       throw error;
     }
+  },
+  createToken() {
+    return jwt.sign({ _id: this._id }, config.jwtSecret);
+  },
+  toAuthJSON() {
+    return {
+      _id: this._id,
+      userName: this.userName,
+      token: `Bearer ${this.createToken()}`
+    };
+  },
+  toJSON() {
+    return {
+      _id: this._id,
+      userName: this.userName
+    };
   }
 };
 

@@ -4,11 +4,13 @@ const logger = require('morgan');
 const compression = require('compression');
 const helmet = require('helmet');
 const cors = require('cors');
+const passport = require('passport');
 
 require('./config/database');
 
 const { notFound, errorHandler } = require('./middlewares');
 const userRoutes = require('./routes/userRoutes');
+const authRoutes = require('./routes/authRoutes');
 
 const app = express();
 
@@ -19,8 +21,10 @@ app.use(cookieParser());
 app.use(compression());
 app.use(helmet());
 app.use(cors());
+app.use(passport.initialize());
 
 app.use('/api/users', userRoutes);
+app.use('/auth', authRoutes);
 
 app.get('/', (req, res) => {
   res.send('Hello world!');
