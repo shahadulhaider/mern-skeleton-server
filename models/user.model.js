@@ -9,7 +9,7 @@ const config = require('../config/config');
 const { passwordReg } = require('../helpers/user.validation');
 
 const UserSchema = new mongoose.Schema({
-  userName: {
+  username: {
     type: String,
     trim: true,
     unique: true,
@@ -92,14 +92,14 @@ UserSchema.methods = {
   toAuthJSON() {
     return {
       _id: this._id,
-      userName: this.userName,
+      username: this.username,
       token: `Bearer ${this.createToken()}`
     };
   },
   toJSON() {
     return {
       _id: this._id,
-      userName: this.userName
+      username: this.username
     };
   }
 };
