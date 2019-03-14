@@ -2,9 +2,6 @@ const mongoose = require('mongoose');
 const validator = require('validator');
 const uniqueValidator = require('mongoose-unique-validator');
 const bcrypt = require('bcrypt');
-const jwt = require('jsonwebtoken');
-
-const config = require('../config/config');
 
 const { passwordReg } = require('../helpers/user.validation');
 
@@ -59,7 +56,6 @@ UserSchema.plugin(uniqueValidator, {
 });
 
 /* eslint-disable func-names */
-
 UserSchema.pre('save', async function (next) {
   if (this.isModified('password')) {
     this.password = await this.hashPassword(this.password);
@@ -86,20 +82,11 @@ UserSchema.methods = {
       throw error;
     }
   },
-  createToken() {
-    return jwt.sign({ _id: this._id }, config.jwtSecret);
-  },
-  toAuthJSON() {
-    return {
-      _id: this._id,
-      username: this.username,
-      token: `Bearer ${this.createToken()}`
-    };
-  },
   toJSON() {
     return {
       _id: this._id,
-      username: this.username
+      username: this.username,
+      email: this.email
     };
   }
 };

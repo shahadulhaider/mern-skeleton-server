@@ -1,6 +1,6 @@
 const HTTPStatus = require('http-status');
-const User = require('../models/user.model');
 
+const User = require('../models/user.model');
 
 async function getAllUser(req, res) {
   try {
@@ -14,7 +14,7 @@ async function getAllUser(req, res) {
 async function createUser(req, res) {
   try {
     const user = await User.create(req.body);
-    return res.status(HTTPStatus.CREATED).json(user.toAuthJSON());
+    return res.status(HTTPStatus.CREATED).json(user);
   } catch (e) {
     return res.status(HTTPStatus.BAD_REQUEST).json(e);
   }
@@ -23,7 +23,6 @@ async function createUser(req, res) {
 async function getUserById(req, res) {
   try {
     const user = await User.findById(req.params.id);
-
     return res.status(HTTPStatus.OK).json(user);
   } catch (e) {
     return res.status(HTTPStatus.BAD_REQUEST).json(e);
