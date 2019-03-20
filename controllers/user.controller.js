@@ -23,7 +23,13 @@ async function createUser(req, res) {
 async function getUserById(req, res) {
   try {
     const user = await User.findById(req.params.id);
-    return res.status(HTTPStatus.OK).json(user);
+    return res.status(HTTPStatus.OK).json({
+      _id: user._id,
+      username: user.username,
+      email: user.email,
+      fullName: `${user.firstName} ${user.lastName}`,
+      createdAt: user.createdAt
+    });
   } catch (e) {
     return res.status(HTTPStatus.BAD_REQUEST).json(e);
   }
