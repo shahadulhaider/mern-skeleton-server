@@ -5,58 +5,63 @@ const bcrypt = require('bcrypt');
 
 const { passwordReg } = require('../helpers/user.validation');
 
-const UserSchema = new mongoose.Schema({
-  username: {
-    type: String,
-    trim: true,
-    unique: true,
-    minlength: [4, 'Username should be longer'],
-    required: [true, 'Username is required']
-  },
-  email: {
-    type: String,
-    trim: true,
-    unique: true,
-    required: [true, 'Email is required'],
-    validate: {
-      validator(email) {
-        return validator.isEmail(email);
-      },
-      message: '{VALUE} is not a valid email'
+const UserSchema = new mongoose.Schema(
+  {
+    username: {
+      type: String,
+      trim: true,
+      unique: true,
+      minlength: [4, 'Username should be longer'],
+      maxlength: [30, 'Username should be shorter'],
+      required: [true, 'Username is required']
+    },
+    email: {
+      type: String,
+      trim: true,
+      unique: true,
+      required: [true, 'Email is required'],
+      validate: {
+        validator(email) {
+          return validator.isEmail(email);
+        },
+        message: '{VALUE} is not a valid email'
+      }
+    },
+    password: {
+      type: String,
+      trim: true,
+      minlength: [8, 'Password should be longer'],
+      maxlength: [30, 'Password should be shorter'],
+      required: [true, 'Username is required'],
+      validate: {
+        validator(password) {
+          return passwordReg.test(password);
+        },
+        message: '{VALUE} is not a valid password'
+      }
+    },
+    firstname: {
+      type: String,
+      trim: true,
+      required: [true, 'First name is required']
+    },
+    lastname: {
+      type: String,
+      trim: true,
+      required: [true, 'Last name is required']
     }
   },
-  password: {
-    type: String,
-    trim: true,
-    minlength: [6, 'Password should be longer'],
-    required: [true, 'Username is required'],
-    validate: {
-      validator(password) {
-        return passwordReg.test(password);
-      },
-      message: '{VALUE} is not a valid password'
-    }
-  },
-  firstName: {
-    type: String,
-    trim: true,
-    required: [true, 'First name is required']
-  },
-  lastName: {
-    type: String,
-    trim: true,
-    required: [true, 'Last name is required']
+  {
+    timestamps: true
   }
-}, {
-  timestamps: true
-});
+);
 
 UserSchema.plugin(uniqueValidator, {
   message: '{VALUE} already taken'
 });
 
 /* eslint-disable func-names */
-UserSchema.pre('save', async function (next) {
+UserSchema.pre('save', async function(next) {
   if (this.isModified('password')) {
     this.password = await this.hashPassword(this.password);
   }

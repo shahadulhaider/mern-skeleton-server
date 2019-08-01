@@ -1,9 +1,10 @@
-const cookieParser = require('cookie-parser');
 const express = require('express');
+const cookieParser = require('cookie-parser');
 const logger = require('morgan');
 const compression = require('compression');
 const helmet = require('helmet');
 const cors = require('cors');
+const httpStatus = require('http-status');
 const passport = require('passport');
 
 require('./config/database');
@@ -24,10 +25,10 @@ app.use(cors({ origin: 'http://localhost:8080', credentials: true }));
 app.use(passport.initialize());
 
 app.use('/api/users', userRoutes);
-app.use('/auth', authRoutes);
+app.use('/api/auth', authRoutes);
 
-app.get('/', (req, res) => {
-  res.send('Hello world!');
+app.get('/api', (req, res) => {
+  res.status(httpStatus.OK).json({ message: 'Hello world!' });
 });
 
 app.use(notFound);

@@ -1,13 +1,14 @@
-const Joi = require('joi');
+const Joi = require('@hapi/joi');
 
-const passwordReg = /(?=.*\d)(?=.*[a-z])(?=.*[A-Z]).{6,}/;
+const passwordReg = /(?=.*\d)(?=.*[a-z])(?=.*[A-Z]).{8,30}/;
 
 const createUser = {
-  userName: Joi.string().alphanum().min(4).required(),
-  email: Joi.string().email().required(),
+  username: Joi.string().alphanum().min(4).max(30)
+    .required(),
+  email: Joi.string().email({ minDomainSegments: 2 }).required(),
   password: Joi.string().regex(passwordReg).required(),
-  firstName: Joi.string().required(),
-  lastName: Joi.string().required()
+  firstname: Joi.string().required(),
+  lastname: Joi.string().required()
 };
 
 module.exports = {

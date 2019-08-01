@@ -1,16 +1,18 @@
 const { Router } = require('express');
-const validate = require('express-validation');
+const expressJoi = require('express-joi-validation');
 
 const userCtrl = require('../controllers/user.controller');
 const { createUser } = require('../helpers/user.validation');
-const { authLocal, authJWT } = require('../services/auth');
+const { authJWT } = require('../services/auth');
 
 const router = Router();
 
-router.get('/', userCtrl.getAllUser);
-router.post('/', validate(createUser), userCtrl.createUser);
+const validator = expressJoi.createValidator({ passError: true });
 
-router.get('/:id', authLocal, userCtrl.getUserById);
+router.get('/', userCtrl.getAllUser);
+router.post('/', validator.body(createUser), userCtrl.createUser);
+
+router.get('/:id', authJWT, userCtrl.getUserById);
 router.put('/:id', authJWT, userCtrl.updateUser);
 router.delete('/:id', authJWT, userCtrl.deleteUser);
 
