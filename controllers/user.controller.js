@@ -27,8 +27,9 @@ async function getUserById(req, res) {
       _id: user._id,
       username: user.username,
       email: user.email,
-      fullName: `${user.firstName} ${user.lastName}`,
-      createdAt: user.createdAt
+      fullname: `${user.firstname} ${user.lastname}`,
+      createdAt: user.createdAt,
+      updatedAt: user.updatedAt
     });
   } catch (e) {
     return res.status(HTTPStatus.BAD_REQUEST).json(e);

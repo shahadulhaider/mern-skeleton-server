@@ -7,19 +7,14 @@ const config = require('../config/config');
 
 passport.use(
   new LocalStrategy(
-    {
-      usernameField: 'email',
-    },
+    { usernameField: 'email', },
     async (email, password, done) => {
       try {
         const user = await User.findOne({ email });
-
         if (!user) {
           return done(null, false);
         }
-
         const match = await user.authenticateUser(password);
-
         if (!match) {
           return done(null, false);
         }
@@ -42,7 +37,7 @@ passport.use(
       try {
         const user = await User.findById(payload._id);
         if (!user) {
-          return done(null, false);
+          return done(null, false, { message: 'No user' });
         }
         return done(null, user);
       } catch (error) {

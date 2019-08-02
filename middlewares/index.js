@@ -10,8 +10,8 @@ function errorHandler(err, req, res, next) {
   if (err && err.error && err.error.isJoi) {
     res.status(HTTPStatus.BAD_REQUEST).json({
       type: err.type,
-      name: err.error,
-      error: process.env.NODE_ENV === 'production' ? {} : err.error.details[0].message,
+      name: err.error.name,
+      message: err.error.details.map(e => e.message),
     });
   } else {
     next(err);

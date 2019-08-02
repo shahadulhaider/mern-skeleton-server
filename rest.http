@@ -1,0 +1,49 @@
+GET http://localhost:5000/api
+
+# get users
+GET http://localhost:5000/api/users
+
+# create user
+POST http://localhost:5000/api/users
+content-type: application/json
+
+{
+  "username": "nusayra",
+  "email": "nusayra@gmail.com",
+  "password": "Testing123",
+  "firstname": "Nusayra",
+  "lastname": "Haider"
+}
+
+
+# login
+POST http://localhost:5000/api/auth/login
+content-type: application/json
+
+{
+  "email": "adan@gmail.com",
+  "password": "Testing123"
+}
+
+# logout
+GET http://localhost:5000/api/auth/logout
+
+
+# // get user by id
+GET http://localhost:5000/api/users/5d43eb20f3390021413b079a
+Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJfaWQiOiI1ZDQzY2ZkOWUxOWU3NTM3NTAwZmI4MGMiLCJpYXQiOjE1NjQ3MzI1NzIsImV4cCI6MTU2NDgxODk3Mn0.287ZpwyvVvPvLA83DVcTcBIfUDgdQrOnMpXWb8J1PRA
+
+#  update user
+PUT http://localhost:5000/api/users/5d43cfd9e19e7537500fb80c
+Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJfaWQiOiI1ZDQzY2ZkOWUxOWU3NTM3NTAwZmI4MGMiLCJpYXQiOjE1NjQ3MzI1NzIsImV4cCI6MTU2NDgxODk3Mn0.287ZpwyvVvPvLA83DVcTcBIfUDgdQrOnMpXWb8J1PRA
+content-type: application/json
+
+{
+  "username": "adan",
+  "password": "Testing123"
+}
+
+# remove user
+DELETE http://localhost:5000/api/users/5d43cfd9e19e7537500fb80c
+Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJfaWQiOiI1ZDQzZDUzYmYxODg4MTZkOWRjNTkxZmUiLCJpYXQiOjE1NjQ3Mjk2MjUsImV4cCI6MTU2NDgxNjAyNX0.U-bw0k8QkVmlqAUFL2Kre_iCGkCsl-i90Z0ArhZ_Kaw
+content-type: application/json
