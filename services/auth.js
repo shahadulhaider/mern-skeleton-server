@@ -7,7 +7,7 @@ const config = require('../config/config');
 
 passport.use(
   new LocalStrategy(
-    { usernameField: 'email', },
+    { usernameField: 'email' },
     async (email, password, done) => {
       try {
         const user = await User.findOne({ email });
@@ -22,22 +22,23 @@ passport.use(
         return done(null, user);
       } catch (e) {
         return done(e, false);
+        r;
       }
-    },
-  ),
+    }
+  )
 );
 
 passport.use(
   new JWTStrategy(
     {
       jwtFromRequest: ExtractJwt.fromAuthHeaderAsBearerToken(),
-      secretOrKey: config.jwtSecret
+      secretOrKey: config.jwtSecret,
     },
     async (payload, done) => {
       try {
         const user = await User.findById(payload._id);
         if (!user) {
-          return done(null, false, { message: 'No user' });
+          return done(null, false);
         }
         return done(null, user);
       } catch (error) {
@@ -52,5 +53,5 @@ const authJWT = passport.authenticate('jwt', { session: false });
 
 module.exports = {
   authLocal,
-  authJWT
+  authJWT,
 };

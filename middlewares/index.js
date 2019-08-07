@@ -8,11 +8,18 @@ function notFound(req, res, next) {
 
 function errorHandler(err, req, res, next) {
   if (err && err.error && err.error.isJoi) {
-    res.status(HTTPStatus.BAD_REQUEST).json({
-      type: err.type,
-      name: err.error.name,
-      message: err.error.details.map(e => e.message),
-    });
+    const { details } = err.error;
+    const errors = {};
+
+    details.forEach(e => (errors[`${e.path}`] = { message: e.message }));
+
+    if (errors.hasOwnProperty('password')) {
+      errors.password = {
+        message:
+          'Password should be at least 8 characters long containing both numbers and letters.',
+      };
+    }
+    res.status(HTTPStatus.BAD_REQUEST).json({ errors });
   } else {
     next(err);
   }
@@ -20,5 +27,5 @@ function errorHandler(err, req, res, next) {
 
 module.exports = {
   notFound,
-  errorHandler
+  errorHandler,
 };

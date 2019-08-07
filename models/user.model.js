@@ -13,7 +13,7 @@ const UserSchema = new mongoose.Schema(
       unique: true,
       minlength: [4, 'Username should be longer'],
       maxlength: [30, 'Username should be shorter'],
-      required: [true, 'Username is required']
+      required: [true, 'Username is required'],
     },
     email: {
       type: String,
@@ -24,8 +24,8 @@ const UserSchema = new mongoose.Schema(
         validator(email) {
           return validator.isEmail(email);
         },
-        message: '{VALUE} is not a valid email'
-      }
+        message: '{VALUE} is not a valid email',
+      },
     },
     password: {
       type: String,
@@ -37,27 +37,27 @@ const UserSchema = new mongoose.Schema(
         validator(password) {
           return passwordReg.test(password);
         },
-        message: '{VALUE} is not a valid password'
-      }
+        message: '{VALUE} is not a valid password',
+      },
     },
     firstname: {
       type: String,
       trim: true,
-      required: [true, 'First name is required']
+      required: [true, 'First name is required'],
     },
     lastname: {
       type: String,
       trim: true,
-      required: [true, 'Last name is required']
-    }
+      required: [true, 'Last name is required'],
+    },
   },
   {
-    timestamps: true
+    timestamps: true,
   }
 );
 
 UserSchema.plugin(uniqueValidator, {
-  message: '{VALUE} already taken'
+  message: '{VALUE} already taken',
 });
 
 /* eslint-disable func-names */
@@ -91,9 +91,9 @@ UserSchema.methods = {
     return {
       _id: this._id,
       username: this.username,
-      email: this.email
+      email: this.email,
     };
-  }
+  },
 };
 
 const User = mongoose.model('user', UserSchema);

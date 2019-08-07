@@ -6,12 +6,14 @@ const config = require('../config/config');
 function login(req, res) {
   try {
     const { user } = req;
-    const token = jwt.sign({ _id: user._id }, config.jwtSecret, { expiresIn: '1d' });
+    const token = jwt.sign({ _id: user._id }, config.jwtSecret, {
+      expiresIn: '1d',
+    });
 
     res.cookie('t', token, {
       expires: new Date(Date.now() + 900000),
       httpOnly: true,
-      secure: true
+      secure: true,
     });
 
     return res.status(HTTPStatus.OK).json({
@@ -19,8 +21,8 @@ function login(req, res) {
       user: {
         _id: user._id,
         username: user.username,
-        email: user.email
-      }
+        email: user.email,
+      },
     });
   } catch (e) {
     return res.sendStatus(HTTPStatus.UNAUTHORIZED);
@@ -34,5 +36,5 @@ function logout(req, res) {
 
 module.exports = {
   login,
-  logout
+  logout,
 };

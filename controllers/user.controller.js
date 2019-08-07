@@ -29,7 +29,7 @@ async function getUserById(req, res) {
       email: user.email,
       fullname: `${user.firstname} ${user.lastname}`,
       createdAt: user.createdAt,
-      updatedAt: user.updatedAt
+      updatedAt: user.updatedAt,
     });
   } catch (e) {
     return res.status(HTTPStatus.BAD_REQUEST).json(e);
@@ -44,7 +44,7 @@ async function updateUser(req, res) {
       return res.sendStatus(HTTPStatus.UNAUTHORIZED);
     }
 
-    Object.keys(req.body).forEach((key) => {
+    Object.keys(req.body).forEach(key => {
       user[key] = req.body[key];
     });
 
@@ -75,5 +75,5 @@ module.exports = {
   createUser,
   getUserById,
   updateUser,
-  deleteUser
+  deleteUser,
 };
