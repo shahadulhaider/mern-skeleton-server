@@ -94,6 +94,17 @@ UserSchema.methods = {
       email: this.email,
     };
   },
+  toProfileJSON() {
+    return {
+      _id: this._id,
+      username: this.username,
+      email: this.email,
+      firstname: this.firstname,
+      lastname: this.lastname,
+      createdAt: this.createdAt,
+      updatedAt: this.updatedAt,
+    };
+  },
 };
 
 const User = mongoose.model('user', UserSchema);
