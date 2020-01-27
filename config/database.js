@@ -7,17 +7,19 @@ mongoose.Promise = global.Promise;
 try {
   mongoose.connect(config.mongoUri, {
     useNewUrlParser: true,
-    useCreateIndex: true
+    useCreateIndex: true,
+    useUnifiedTopology: true,
   });
 } catch (error) {
   mongoose.createConnection(config.mongoUri, {
     useNewUrlParser: true,
-    useCreateIndex: true
+    useCreateIndex: true,
+    useUnifiedTopology: true,
   });
 }
 
 mongoose.connection
   .once('open', () => console.log('MongoDB running'))
-  .on('error', (err) => {
+  .on('error', err => {
     throw err;
   });

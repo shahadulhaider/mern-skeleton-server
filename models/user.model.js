@@ -31,13 +31,12 @@ const UserSchema = new mongoose.Schema(
       type: String,
       trim: true,
       minlength: [8, 'Password should be longer'],
-      maxlength: [30, 'Password should be shorter'],
-      required: [true, 'Username is required'],
+      required: [true, 'Password is required'],
       validate: {
         validator(password) {
           return passwordReg.test(password);
         },
-        message: '{VALUE} is not a valid password',
+        message: 'Not a valid password',
       },
     },
     firstname: {
@@ -53,7 +52,7 @@ const UserSchema = new mongoose.Schema(
   },
   {
     timestamps: true,
-  }
+  },
 );
 
 UserSchema.plugin(uniqueValidator, {

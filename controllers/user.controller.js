@@ -1,40 +1,61 @@
 const HTTPStatus = require('http-status');
+const ApiError = require('../helpers/apiError');
 
 const User = require('../models/user.model');
 
-async function getAllUser(req, res) {
+async function getAllUser(req, res, next) {
   try {
     const users = await User.find().sort({ cratedAt: -1 });
-    return res.status(HTTPStatus.OK).json(users);
+    return res.status(HTTPStatus.OK).json({
+      statusCode: HTTPStatus.OK,
+      status: HTTPStatus[HTTPStatus.OK],
+      data: users,
+      message: 'Fetched all users',
+    });
   } catch (e) {
-    return res.status(HTTPStatus.BAD_REQUEST).json(e);
+    next(e);
   }
 }
 
-async function createUser(req, res) {
+async function createUser(req, res, next) {
   try {
     const user = await User.create(req.body);
-    return res.status(HTTPStatus.CREATED).json(user);
+    return res.status(HTTPStatus.CREATED).json({
+      statusCode: HTTPStatus.CREATED,
+      status: HTTPStatus[HTTPStatus.CREATED],
+      data: user,
+      message: 'User created',
+    });
   } catch (e) {
-    return res.status(HTTPStatus.BAD_REQUEST).json(e);
+    next(e);
   }
 }
 
-async function getUserById(req, res) {
+async function getUserById(req, res, next) {
   try {
     const user = await User.findById(req.params.id);
-    return res.status(HTTPStatus.OK).json(user.toProfileJSON());
+    return res.status(HTTPStatus.OK).json({
+      statusCode: HTTPStatus.OK,
+      status: HTTPStatus[HTTPStatus.OK],
+      data: user.toProfileJSON(),
+      message: 'Fetched user',
+    });
   } catch (e) {
-    return res.status(HTTPStatus.BAD_REQUEST).json(e);
+    next(e);
   }
 }
 
-async function updateUser(req, res) {
+async function updateUser(req, res, next) {
   try {
     let user = await User.findById(req.params.id);
 
     if (!user.equals(req.user._id)) {
-      return res.sendStatus(HTTPStatus.UNAUTHORIZED);
+      const err = new ApiError(
+        HTTPStatus.UNAUTHORIZED,
+        HTTPStatus[HTTPStatus.UNAUTHORIZED],
+        'Not Authorized to perform this action',
+      );
+      return next(err);
     }
 
     Object.keys(req.body).forEach(key => {
@@ -42,24 +63,39 @@ async function updateUser(req, res) {
     });
 
     user = await user.save();
-    return res.status(HTTPStatus.OK).json(user);
+    return res.status(HTTPStatus.OK).json({
+      statusCode: HTTPStatus.OK,
+      status: HTTPStatus[HTTPStatus.OK],
+      data: user,
+      message: 'Updated user',
+    });
   } catch (e) {
-    return res.status(HTTPStatus.BAD_REQUEST).json(e);
+    next(e);
   }
 }
 
-async function deleteUser(req, res) {
+async function deleteUser(req, res, next) {
   try {
     const user = await User.findById(req.params.id);
 
     if (!user.equals(req.user._id)) {
-      return res.sendStatus(HTTPStatus.UNAUTHORIZED);
+      const err = new ApiError(
+        HTTPStatus.UNAUTHORIZED,
+        HTTPStatus[HTTPStatus.UNAUTHORIZED],
+        'Not Authorized to perform this action',
+      );
+      return next(err);
     }
 
     await user.remove();
-    return res.sendStatus(HTTPStatus.OK);
+    return res.status(HTTPStatus.OK).json({
+      statusCode: HTTPStatus.OK,
+      status: HTTPStatus[HTTPStatus.OK],
+      data: user,
+      message: 'Deleted user',
+    });
   } catch (e) {
-    return res.status(HTTPStatus.BAD_REQUEST).json(e);
+    next(e);
   }
 }
 

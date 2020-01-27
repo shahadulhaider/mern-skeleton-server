@@ -3,7 +3,7 @@ const jwt = require('jsonwebtoken');
 
 const config = require('../config/config');
 
-function login(req, res) {
+function login(req, res, next) {
   try {
     const { user } = req;
     const token = jwt.sign({ _id: user._id }, config.jwtSecret, {
@@ -17,15 +17,21 @@ function login(req, res) {
     });
 
     return res.status(HTTPStatus.OK).json({
-      token: `Bearer ${token}`,
-      user: {
-        _id: user._id,
-        username: user.username,
-        email: user.email,
+      statusCode: HTTPStatus.OK,
+      status: HTTPStatus[HTTPStatus.OK],
+      data: {
+        token: `Bearer ${token}`,
+        user: {
+          _id: user._id,
+          username: user.username,
+          email: user.email,
+        },
       },
+      message: 'Successful login',
     });
   } catch (e) {
-    return res.sendStatus(HTTPStatus.UNAUTHORIZED);
+    next(e);
+    // return res.sendStatus(HTTPStatus.UNAUTHORIZED);
   }
 }
 

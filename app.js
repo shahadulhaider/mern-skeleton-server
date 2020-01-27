@@ -4,7 +4,7 @@ const logger = require('morgan');
 const compression = require('compression');
 const helmet = require('helmet');
 const cors = require('cors');
-const httpStatus = require('http-status');
+const HTTPStatus = require('http-status');
 const passport = require('passport');
 
 require('./config/database');
@@ -28,7 +28,12 @@ app.use('/api/users', userRoutes);
 app.use('/api/auth', authRoutes);
 
 app.get('/api', (req, res) => {
-  res.status(httpStatus.OK).json({ message: 'Hello world!' });
+  res.status(HTTPStatus.OK).json({
+    statusCode: HTTPStatus.OK,
+    status: HTTPStatus[HTTPStatus.OK],
+    data: null,
+    message: 'Hello from mern-skeleton api',
+  });
 });
 
 app.use(notFound);
