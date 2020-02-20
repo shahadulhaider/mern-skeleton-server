@@ -2,8 +2,12 @@ const mongoose = require('mongoose');
 const validator = require('validator');
 const uniqueValidator = require('mongoose-unique-validator');
 const bcrypt = require('bcrypt');
+const jwt = require('jsonwebtoken');
+const crypto = require('crypto');
 
-const { passwordReg } = require('../helpers/user.validation');
+const config = require('../config/config');
+const { generateRandomBytes, generateTokenHash } = require('../helpers/crypto');
+const { passwordReg } = require('../helpers/validation/user.validation');
 
 const UserSchema = new mongoose.Schema(
   {
@@ -49,6 +53,14 @@ const UserSchema = new mongoose.Schema(
       trim: true,
       required: [true, 'Last name is required'],
     },
+    profilePicture: String,
+    isVerified: {
+      type: Boolean,
+      default: false,
+    },
+    emailVerificationToken: String,
+    resetPasswordToken: String,
+    resetPasswordExpire: Date,
   },
   {
     timestamps: true,
@@ -64,7 +76,9 @@ UserSchema.pre('save', async function(next) {
   if (this.isModified('password')) {
     this.password = await this.hashPassword(this.password);
   }
-
+  if (!this.profilePicture) {
+    this.profilePicture = this.generateAvatarUrl();
+  }
   return next();
 });
 
@@ -86,24 +100,50 @@ UserSchema.methods = {
       throw error;
     }
   },
-  toJSON() {
+  createToken() {
+    return jwt.sign({ _id: this._id }, config.jwtSecret, {
+      expiresIn: '1d',
+    });
+  },
+  generateAvatarUrl() {
+    const hash = crypto
+      .createHash('md5')
+      .update(this.email)
+      .digest('hex');
+    return `https://www.gravatar.com/avatar/${hash}?s=240&d=identicon`;
+  },
+  getEmailVerificationToken() {
+    const verificationToken = generateRandomBytes(15);
+    this.emailVerificationToken = generateTokenHash(verificationToken);
+
+    return verificationToken;
+  },
+  getResetPasswordToken() {
+    const resetToken = generateRandomBytes(20);
+    this.resetPasswordToken = generateTokenHash(resetToken);
+    this.resetPasswordExpire = Date.now() + 10 * 60 * 1000;
+
+    return resetToken;
+  },
+  toAuthJSON() {
     return {
       _id: this._id,
       username: this.username,
       email: this.email,
+      profilePicture: this.profilePicture,
     };
   },
-  toProfileJSON() {
-    return {
-      _id: this._id,
-      username: this.username,
-      email: this.email,
-      firstname: this.firstname,
-      lastname: this.lastname,
-      createdAt: this.createdAt,
-      updatedAt: this.updatedAt,
-    };
-  },
+  // toJSON() {
+  //   return {
+  //     _id: this._id,
+  //     username: this.username,
+  //     email: this.email,
+  //     firstname: this.firstname,
+  //     lastname: this.lastname,
+  //     createdAt: this.createdAt,
+  //     updatedAt: this.updatedAt,
+  //   };
+  // },
 };
 
 const User = mongoose.model('user', UserSchema);

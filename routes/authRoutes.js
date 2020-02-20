@@ -1,13 +1,20 @@
 const { Router } = require('express');
 
-const { celebrate } = require('celebrate');
 const authCtrl = require('../controllers/auth.controller');
-const { loginUser } = require('../helpers/auth.validation');
-const { authLocal } = require('../services/auth');
+const {
+  loginValidation,
+  registerValidation,
+} = require('../helpers/validation/auth.validation');
+const { authLocal, authJWT } = require('../services/auth');
 
 const router = Router();
 
+router.post('/register', registerValidation, authCtrl.registerUser);
+router.post('/login', loginValidation, authLocal, authCtrl.login);
 router.get('/logout', authCtrl.logout);
-router.post('/login', celebrate(loginUser), authLocal, authCtrl.login);
+router.get('/me', authJWT, authCtrl.getMe);
+router.post('/verifyemail/:token', authCtrl.verifyeMail);
+router.post('/forgotpassword', authCtrl.forgotPassword);
+router.put('/resetpassword/:resetToken', authCtrl.resetPassword);
 
 module.exports = router;

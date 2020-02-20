@@ -27,10 +27,10 @@ function errorHandler(err, req, res, next) {
 
     switch (authError) {
       case 'UserNotFound':
-        err.message = 'UserNotFound';
+        err.message = 'No user with given credentials';
         break;
       case 'WrongCredentials':
-        err.message = 'WrongCredentials';
+        err.message = 'Wrong email or password';
         break;
       default:
         err.message = 'Unauthorized';

@@ -9,22 +9,8 @@ async function getAllUser(req, res, next) {
     return res.status(HTTPStatus.OK).json({
       statusCode: HTTPStatus.OK,
       status: HTTPStatus[HTTPStatus.OK],
-      data: users,
+      users,
       message: 'Fetched all users',
-    });
-  } catch (e) {
-    next(e);
-  }
-}
-
-async function createUser(req, res, next) {
-  try {
-    const user = await User.create(req.body);
-    return res.status(HTTPStatus.CREATED).json({
-      statusCode: HTTPStatus.CREATED,
-      status: HTTPStatus[HTTPStatus.CREATED],
-      data: user,
-      message: 'User created',
     });
   } catch (e) {
     next(e);
@@ -37,7 +23,7 @@ async function getUserById(req, res, next) {
     return res.status(HTTPStatus.OK).json({
       statusCode: HTTPStatus.OK,
       status: HTTPStatus[HTTPStatus.OK],
-      data: user.toProfileJSON(),
+      user: user.toProfileJSON(),
       message: 'Fetched user',
     });
   } catch (e) {
@@ -66,7 +52,7 @@ async function updateUser(req, res, next) {
     return res.status(HTTPStatus.OK).json({
       statusCode: HTTPStatus.OK,
       status: HTTPStatus[HTTPStatus.OK],
-      data: user,
+      user,
       message: 'Updated user',
     });
   } catch (e) {
@@ -91,7 +77,7 @@ async function deleteUser(req, res, next) {
     return res.status(HTTPStatus.OK).json({
       statusCode: HTTPStatus.OK,
       status: HTTPStatus[HTTPStatus.OK],
-      data: user,
+      user,
       message: 'Deleted user',
     });
   } catch (e) {
@@ -101,7 +87,6 @@ async function deleteUser(req, res, next) {
 
 module.exports = {
   getAllUser,
-  createUser,
   getUserById,
   updateUser,
   deleteUser,

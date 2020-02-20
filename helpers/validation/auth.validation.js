@@ -1,8 +1,8 @@
-const { Joi, Segments } = require('celebrate');
+const { celebrate, Joi, Segments } = require('celebrate');
 
 const passwordReg = /(?=.*\d)(?=.*[a-z])(?=.*[A-Z]).{8,30}/;
 
-const createUser = {
+const registerUserSchema = {
   [Segments.BODY]: Joi.object().keys({
     username: Joi.string()
       .alphanum()
@@ -20,21 +20,18 @@ const createUser = {
   }),
 };
 
-const updateUser = {
+const loginUserSchema = {
   [Segments.BODY]: Joi.object().keys({
-    username: Joi.string()
-      .alphanum()
-      .min(4)
-      .max(30),
-    email: Joi.string().email({ minDomainSegments: 2 }),
-    password: Joi.string().regex(passwordReg),
-    firstname: Joi.string(),
-    lastname: Joi.string(),
+    email: Joi.string()
+      .email({ minDomainSegments: 2 })
+      .required(),
+    password: Joi.string()
+      .required()
+      .regex(passwordReg),
   }),
 };
 
 module.exports = {
-  passwordReg,
-  createUser,
-  updateUser,
+  registerValidation: celebrate(registerUserSchema),
+  loginValidation: celebrate(loginUserSchema),
 };
