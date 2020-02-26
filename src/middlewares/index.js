@@ -1,6 +1,7 @@
+/* eslint-disable no-param-reassign */
 const HTTPStatus = require('http-status');
-const ApiError = require('../helpers/apiError');
 const { isCelebrate } = require('celebrate');
+const ApiError = require('../helpers/apiError');
 
 function notFound(req, res, next) {
   const err = new ApiError(
@@ -11,6 +12,7 @@ function notFound(req, res, next) {
   next(err);
 }
 
+// eslint-disable-next-line no-unused-vars
 function errorHandler(err, req, res, next) {
   console.log(JSON.parse(JSON.stringify(err)));
   console.log(err.constructor.name);
@@ -41,7 +43,8 @@ function errorHandler(err, req, res, next) {
     const { errors } = err;
 
     const detail = {};
-    for (let [key, value] of Object.entries(errors)) {
+    // eslint-disable-next-line no-restricted-syntax
+    for (const [key, value] of Object.entries(errors)) {
       detail[`${key}`] = { message: `${value}` };
     }
     err.detail = detail;

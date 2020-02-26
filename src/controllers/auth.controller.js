@@ -1,5 +1,6 @@
+/* eslint-disable no-undef */
+/* eslint-disable consistent-return */
 const HTTPStatus = require('http-status');
-const jwt = require('jsonwebtoken');
 
 const User = require('../models/user.model');
 const ApiError = require('../helpers/apiError');
@@ -60,7 +61,6 @@ function login(req, res, next) {
     });
   } catch (e) {
     next(e);
-    // return res.sendStatus(HTTPStatus.UNAUTHORIZED);
   }
 }
 
@@ -75,7 +75,7 @@ function getMe(req, res, next) {
     return res.status(HTTPStatus.OK).json({
       statusCode: HTTPStatus.OK,
       status: HTTPStatus[HTTPStatus.OK],
-      user: user,
+      user,
       message: 'Fetched current user',
     });
   } catch (e) {
@@ -187,7 +187,7 @@ async function resetPassword(req, res, next) {
 
     await user.save();
 
-    const token = user.createToken();
+    user.createToken();
 
     return res.status(HTTPStatus.OK).json({
       statusCode: HTTPStatus.OK,

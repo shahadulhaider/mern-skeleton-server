@@ -84,6 +84,7 @@ UserSchema.pre('save', async function(next) {
 
 UserSchema.methods = {
   async hashPassword(password) {
+    // eslint-disable-next-line no-useless-catch
     try {
       const salt = await bcrypt.genSalt(10);
       const hashed = await bcrypt.hash(password, salt);
@@ -93,6 +94,7 @@ UserSchema.methods = {
     }
   },
   async authenticateUser(password) {
+    // eslint-disable-next-line no-useless-catch
     try {
       const match = await bcrypt.compare(password, this.password);
       return match;
@@ -131,19 +133,22 @@ UserSchema.methods = {
       username: this.username,
       email: this.email,
       profilePicture: this.profilePicture,
+      firstname: this.firstname,
+      lastname: this.lastname,
     };
   },
-  // toJSON() {
-  //   return {
-  //     _id: this._id,
-  //     username: this.username,
-  //     email: this.email,
-  //     firstname: this.firstname,
-  //     lastname: this.lastname,
-  //     createdAt: this.createdAt,
-  //     updatedAt: this.updatedAt,
-  //   };
-  // },
+  toProfileJSON() {
+    return {
+      _id: this._id,
+      username: this.username,
+      email: this.email,
+      firstname: this.firstname,
+      lastname: this.lastname,
+      profilePicture: this.profilePicture,
+      createdAt: this.createdAt,
+      updatedAt: this.updatedAt,
+    };
+  },
 };
 
 const User = mongoose.model('user', UserSchema);

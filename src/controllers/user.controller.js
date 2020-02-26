@@ -1,3 +1,4 @@
+/* eslint-disable consistent-return */
 const HTTPStatus = require('http-status');
 const ApiError = require('../helpers/apiError');
 

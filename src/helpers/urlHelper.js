@@ -1,7 +1,8 @@
 const config = require('../config/config');
 
+// eslint-disable-next-line func-names
 exports.emailUrls = function(req) {
-  let urls = {};
+  const urls = {};
   if (config.nodeEnv === 'production') {
     urls.password = `${req.protocol}://${req.get('host')}/auth/resetPassword`;
     urls.verification = `${req.protocol}://${req.get('host')}/auth/verifyemail`;
